@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light" data-accent="indigo">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="StudyBoost — бесплатный умный помощник школьника: домашние задания, дедлайны, план учёбы и режим «У меня 30 минут».">
+  <meta name="theme-color" content="#4f63ff">
+  <title>StudyBoost — умный помощник школьника</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234f63ff'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Cpath d='M7 21l6-6 4 4 8-8M19 11h6v6' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Набор иконок (SVG-спрайт). Используется через <use href="#i-..."> -->
+  <svg class="sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M10 6h11M10 12h11M10 18h11"/><path d="m3 6 1.5 1.5L7 5"/><path d="m3 12 1.5 1.5L7 11"/><path d="m3 18 1.5 1.5L7 17"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M16 2.5v4M8 2.5v4M3 10h18"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 21h18"/><rect x="5" y="11" width="3" height="7" rx="1"/><rect x="10.5" y="5" width="3" height="13" rx="1"/><rect x="16" y="13" width="3" height="5" rx="1"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a7 7 0 0 0 11 11z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-hourglass" viewBox="0 0 24 24"><path d="M6 2h12M6 22h12M7 2v3a5 5 0 0 0 10 0V2M7 22v-3a5 5 0 0 1 10 0v3"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 22V4"/><path d="M5 4h12l-2.5 4L17 12H5"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 22c4 0 7-2.7 7-6.8 0-3.6-2.4-6-4.3-8.2-.4 2-1.4 3.3-2.7 3.8C12.6 7 11 4.2 8.5 2.5 8.7 6 5 8.4 5 13.8 5 18.8 8 22 12 22z"/></symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9z"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 21V9M7 14l5-5 5 5M4 3h16"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.2L3 16M3 21v-5h5"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M11 3l1.8 5.2L18 10l-5.2 1.8L11 17l-1.8-5.2L4 10l5.2-1.8z"/><path d="M19 14l.8 2.2L22 17l-2.2.8L19 20l-.8-2.2L16 17l2.2-.8z"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></symbol>
+    <symbol id="i-stairs" viewBox="0 0 24 24"><path d="M3 20h5v-5h5v-5h5V5h3"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-minimize" viewBox="0 0 24 24"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/></symbol>
+    <symbol id="i-trend" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V17h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-cap" viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18c1.1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.7 1.7-1.7H16a5 5 0 0 0 5-5c0-4-4-7.2-9-7.2z"/><circle cx="7.5" cy="11.5" r="1"/><circle cx="10" cy="7.5" r="1"/><circle cx="14.5" cy="7.5" r="1"/></symbol>
+  </svg>
+
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+
+  <!-- ===================== Шапка ===================== -->
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="logo" href="#home" aria-label="StudyBoost — на главную">
+        <span class="logo__mark"><svg class="icon" aria-hidden="true"><use href="#i-trend"></use></svg></span>
+        <span class="logo__text">Study<span>Boost</span></span>
+      </a>
+
+      <nav class="mainnav" aria-label="Основная навигация">
+        <a class="mainnav__link" href="#home" data-nav="home"><svg class="icon" aria-hidden="true"><use href="#i-home"></use></svg><span class="mainnav__text">Главная</span></a>
+        <a class="mainnav__link" href="#tasks" data-nav="tasks"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span class="mainnav__text">Мои задания</span></a>
+        <a class="mainnav__link" href="#schedule" data-nav="schedule"><svg class="icon" aria-hidden="true"><use href="#i-calendar"></use></svg><span class="mainnav__text">Расписание</span></a>
+        <a class="mainnav__link" href="#stats" data-nav="stats"><svg class="icon" aria-hidden="true"><use href="#i-chart"></use></svg><span class="mainnav__text">Статистика</span></a>
+        <a class="mainnav__link" href="#settings" data-nav="settings"><svg class="icon" aria-hidden="true"><use href="#i-sliders"></use></svg><span class="mainnav__text">Настройки</span></a>
+      </nav>
+
+      <div class="topbar__actions">
+        <button type="button" class="icon-btn" id="bellBtn" data-action="toggle-notifications" aria-label="Уведомления" aria-expanded="false" aria-controls="notifPanel">
+          <svg class="icon" aria-hidden="true"><use href="#i-bell"></use></svg>
+          <span class="badge" id="bellBadge" hidden>0</span>
+        </button>
+        <button type="button" class="icon-btn" id="themeToggle" data-action="toggle-theme" aria-label="Включить тёмную тему" aria-pressed="false">
+          <svg class="icon" aria-hidden="true"><use id="themeIcon" href="#i-moon"></use></svg>
+        </button>
+      </div>
+    </div>
+
+    <section class="notif-panel" id="notifPanel" aria-label="Уведомления" hidden>
+      <div class="notif-panel__head">
+        <h2 class="notif-panel__title">Уведомления</h2>
+        <div class="notif-panel__actions">
+          <button type="button" class="text-btn" data-action="notif-read-all">Прочитать все</button>
+          <button type="button" class="text-btn" data-action="notif-clear">Очистить</button>
+        </div>
+      </div>
+      <ul class="notif-list" id="notifList"></ul>
+      <p class="notif-panel__note">
+        <svg class="icon" aria-hidden="true"><use href="#i-info"></use></svg>
+        Уведомления появляются внутри StudyBoost, пока сайт открыт во вкладке браузера.
+      </p>
+    </section>
+  </header>
+
+  <main id="main" class="container" tabindex="-1">
+
+    <!-- ===================== Главная ===================== -->
+    <section class="page" id="page-home" data-page="home" aria-labelledby="heroGreeting">
+      <div class="demo-banner" id="demoBanner" hidden>
+        <span class="demo-banner__icon"><svg class="icon" aria-hidden="true"><use href="#i-sparkles"></use></svg></span>
+        <p><strong>Сейчас показаны демонстрационные задания и расписание.</strong> Они помогают сразу увидеть, как работает умный планировщик. Удали их, когда будешь готов начать со своими заданиями.</p>
+        <button type="button" class="btn btn--ghost btn--sm" data-action="remove-demo">
+          <svg class="icon" aria-hidden="true"><use href="#i-trash"></use></svg>Начать с чистого листа
+        </button>
+      </div>
+
+      <section class="hero">
+        <div class="hero__content">
+          <p class="hero__date"><svg class="icon" aria-hidden="true"><use href="#i-calendar"></use></svg><span id="heroDate"></span></p>
+          <h1 class="hero__title" id="heroGreeting">Привет!</h1>
+          <p class="hero__subtitle" id="heroSummary"></p>
+          <div class="hero__actions">
+            <button type="button" class="btn btn--hero" data-action="open-focus">
+              <span class="btn__icon"><svg class="icon" aria-hidden="true"><use href="#i-bolt"></use></svg></span>
+              <span class="btn__text">У меня 30 минут<small>подберу задания под твоё время</small></span>
+            </button>
+            <button type="button" class="btn btn--glass" data-action="add-task">
+              <svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>Добавить задание
+            </button>
+          </div>
+        </div>
+        <aside class="hero__aside">
+          <div class="glass-card">
+            <p class="glass-card__label"><svg class="icon" aria-hidden="true"><use href="#i-bulb"></use></svg>Совет дня</p>
+            <p id="tipOfDay"></p>
+          </div>
+        </aside>
+      </section>
+
+      <div class="kpi-grid" id="homeKpis" aria-live="polite"></div>
+
+      <div class="home-grid">
+        <section class="card plan-card" aria-labelledby="planTitle">
+          <div class="card__head">
+            <div>
+              <h2 class="card__title" id="planTitle"><svg class="icon" aria-hidden="true"><use href="#i-target"></use></svg>План на сегодня</h2>
+              <p class="card__subtitle">Порядок рассчитан умным планировщиком с учётом твоего времени</p>
+            </div>
+            <div class="budget">
+              <label for="planBudget">Время на учёбу сегодня</label>
+              <select class="select select--sm" id="planBudget">
+                <option value="30">30 мин</option>
+                <option value="45">45 мин</option>
+                <option value="60">1 ч</option>
+                <option value="90">1 ч 30 мин</option>
+                <option value="120">2 ч</option>
+                <option value="150">2 ч 30 мин</option>
+                <option value="180">3 ч</option>
+                <option value="240">4 ч</option>
+              </select>
+            </div>
+          </div>
+          <div id="todayPlan"></div>
+          <details class="formula">
+            <summary><svg class="icon" aria-hidden="true"><use href="#i-info"></use></svg>Как StudyBoost выбирает порядок заданий?</summary>
+            <div class="formula__body">
+              <p>Каждое невыполненное задание получает оценку от 0 до 100 баллов. Чем выше оценка, тем раньше задание в плане.</p>
+              <ul>
+                <li><strong>Срочность — до 50 баллов.</strong> Просрочено — 50, до 12 часов — 45, до суток — 40, до 2 дней — 30, до 3 дней — 22, до недели — 12, позже — 5.</li>
+                <li><strong>Приоритет — до 25 баллов.</strong> Высокий — 25, средний — 15, низкий — 6.</li>
+                <li><strong>Сложность — до 10 баллов.</strong> Сложные задания лучше начинать раньше, пока есть силы.</li>
+                <li><strong>Быстрая победа — до 10 баллов.</strong> Короткие задания легко закрыть сразу: до 15 минут — 10, до 30 — 7, до 60 — 4.</li>
+                <li><strong>Риск — 5 баллов.</strong> Сложное задание со сроком в ближайшие 2 дня.</li>
+              </ul>
+              <p>Затем задания по очереди добавляются в план, пока хватает свободного времени. Всё, что не помещается, честно переносится в блок «Лучше оставить на потом».</p>
+            </div>
+          </details>
+        </section>
+
+        <div class="home-side">
+          <section class="card next-card" aria-labelledby="nextStepTitle">
+            <h2 class="card__title" id="nextStepTitle"><svg class="icon" aria-hidden="true"><use href="#i-sparkles"></use></svg>Что сделать следующим</h2>
+            <div id="nextStep"></div>
+          </section>
+
+          <section class="card" aria-labelledby="deadlineTitle">
+            <h2 class="card__title" id="deadlineTitle"><svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg>Ближайший дедлайн</h2>
+            <div id="deadlineInfo"></div>
+          </section>
+
+          <section class="card tour-card" id="tourCard" aria-labelledby="tourTitle">
+            <div class="card__head card__head--tight">
+              <h2 class="card__title" id="tourTitle"><svg class="icon" aria-hidden="true"><use href="#i-flag"></use></svg>Демо-сценарий</h2>
+              <button type="button" class="text-btn" data-action="tour-hide">Скрыть</button>
+            </div>
+            <p class="card__subtitle">Пройди путь школьника за пару минут: <span id="tourCount">0 из 6</span></p>
+            <div class="progress-line" aria-hidden="true"><span id="tourProgress"></span></div>
+            <ol class="tour-list" id="tourList"></ol>
+          </section>
+        </div>
+      </div>
+
+      <section class="mission" id="mission" aria-labelledby="missionTitle">
+        <div class="section-head">
+          <p class="eyebrow">Социальная миссия</p>
+          <h2 class="section-title" id="missionTitle">Почему StudyBoost помогает школьникам</h2>
+          <p class="section-lead">StudyBoost — бесплатный образовательный проект. Его задача — сделать так, чтобы учёба была понятной и спокойной, а не превращалась в бесконечный список дел.</p>
+        </div>
+        <div class="mission__grid">
+          <article class="mission-card">
+            <span class="mission-card__icon"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg></span>
+            <h3>Планирование снижает нагрузку</h3>
+            <p>Когда все задания и сроки собраны в одном месте, не нужно держать их в голове. План помогает распределить силы заранее и не делать всё в последний вечер.</p>
+          </article>
+          <article class="mission-card">
+            <span class="mission-card__icon"><svg class="icon" aria-hidden="true"><use href="#i-stairs"></use></svg></span>
+            <h3>Маленькие шаги вместо горы</h3>
+            <p>Большое задание легко откладывать: непонятно, с чего начать. Шаги по 10–20 минут начинать проще, а каждый выполненный шаг показывает, что дело движется.</p>
+          </article>
+          <article class="mission-card">
+            <span class="mission-card__icon"><svg class="icon" aria-hidden="true"><use href="#i-bell"></use></svg></span>
+            <h3>Меньше шансов забыть</h3>
+            <p>Задание, записанное сразу после урока, уже не потеряется. StudyBoost сам подсвечивает, что горит, а что может подождать, и напоминает о сроках, пока сайт открыт.</p>
+          </article>
+          <article class="mission-card">
+            <span class="mission-card__icon"><svg class="icon" aria-hidden="true"><use href="#i-heart"></use></svg></span>
+            <h3>Бесплатно и для всех</h3>
+            <p>Удобная организация учёбы не должна зависеть от денег или мощного устройства. StudyBoost бесплатный, работает без регистрации и хранит данные только в браузере ученика.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="tips" aria-labelledby="tipsTitle">
+        <div class="section-head">
+          <p class="eyebrow">Полезные привычки</p>
+          <h2 class="section-title" id="tipsTitle">Короткие советы по учёбе</h2>
+        </div>
+        <ol class="tips__grid">
+          <li class="tip"><span class="tip__num">1</span><p>Записывай домашнее задание сразу на уроке — так оно точно не потеряется.</p></li>
+          <li class="tip"><span class="tip__num">2</span><p>Начни с короткого задания, чтобы «разогнаться», а сложное делай, пока есть силы.</p></li>
+          <li class="tip"><span class="tip__num">3</span><p>Занимайся отрезками по 25–30 минут и делай перерыв на 5 минут.</p></li>
+          <li class="tip"><span class="tip__num">4</span><p>Убери телефон из поля зрения на время учебной сессии.</p></li>
+          <li class="tip"><span class="tip__num">5</span><p>Дели большое задание на шаги по 15–20 минут и отмечай каждый шаг.</p></li>
+          <li class="tip"><span class="tip__num">6</span><p>Повторяй новые слова и правила через день, а не только накануне урока.</p></li>
+          <li class="tip"><span class="tip__num">7</span><p>Собирай рюкзак и всё нужное с вечера — утро будет спокойнее.</p></li>
+          <li class="tip"><span class="tip__num">8</span><p>Не успеваешь? Предупреди учителя заранее, а не в последний момент.</p></li>
+        </ol>
+      </section>
+    </section>
+
+    <!-- ===================== Мои задания ===================== -->
+    <section class="page" id="page-tasks" data-page="tasks" aria-labelledby="tasksTitle" hidden>
+      <div class="page-head">
+        <div>
+          <h1 id="tasksTitle">Мои задания</h1>
+          <p id="tasksSummary"></p>
+        </div>
+        <button type="button" class="btn btn--primary" data-action="add-task">
+          <svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>Добавить задание
+        </button>
+      </div>
+
+      <div class="card toolbar">
+        <div class="search">
+          <label for="taskSearch" class="sr-only">Поиск заданий</label>
+          <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
+          <input class="input" type="search" id="taskSearch" placeholder="Поиск по названию, описанию или предмету" autocomplete="off">
+        </div>
+        <div class="filters">
+          <div class="field">
+            <label for="filterSubject">Предмет</label>
+            <select class="select" id="filterSubject"></select>
+          </div>
+          <div class="field">
+            <label for="filterPriority">Приоритет</label>
+            <select class="select" id="filterPriority">
+              <option value="all">Любой приоритет</option>
+              <option value="high">Высокий</option>
+              <option value="medium">Средний</option>
+              <option value="low">Низкий</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="sortTasks">Сортировка</label>
+            <select class="select" id="sortTasks">
+              <option value="smart">Умный порядок (рекомендуется)</option>
+              <option value="deadline-asc">Дедлайн: сначала ближайшие</option>
+              <option value="deadline-desc">Дедлайн: сначала дальние</option>
+              <option value="duration-asc">Время: сначала короткие</option>
+              <option value="duration-desc">Время: сначала длинные</option>
+            </select>
+          </div>
+        </div>
+        <div class="toolbar__bottom">
+          <div class="status-chips" id="statusChips" role="group" aria-label="Фильтр по статусу"></div>
+          <p class="toolbar__count" id="tasksResultCount" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="legend" aria-label="Цветовые обозначения">
+        <span><i class="dot dot--done"></i>Выполнено</span>
+        <span><i class="dot dot--soon"></i>Скоро дедлайн (меньше суток)</span>
+        <span><i class="dot dot--overdue"></i>Просрочено</span>
+        <span><i class="dot dot--normal"></i>Обычное задание</span>
+      </div>
+
+      <ul class="task-list" id="taskList"></ul>
+    </section>
+
+    <!-- ===================== Расписание ===================== -->
+    <section class="page" id="page-schedule" data-page="schedule" aria-labelledby="scheduleTitle" hidden>
+      <div class="page-head">
+        <div>
+          <h1 id="scheduleTitle">Расписание</h1>
+          <p>Уроки на неделю и домашние задания, которые нужно сдать к каждому дню</p>
+        </div>
+        <button type="button" class="btn btn--primary" data-action="add-lesson">
+          <svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>Добавить урок
+        </button>
+      </div>
+
+      <div class="card week-nav">
+        <button type="button" class="icon-btn" data-action="week-prev" aria-label="Предыдущая неделя"><svg class="icon" aria-hidden="true"><use href="#i-chevron-left"></use></svg></button>
+        <p class="week-nav__label" id="weekLabel" aria-live="polite"></p>
+        <button type="button" class="icon-btn" data-action="week-next" aria-label="Следующая неделя"><svg class="icon" aria-hidden="true"><use href="#i-chevron-right"></use></svg></button>
+        <button type="button" class="btn btn--ghost btn--sm" data-action="week-today">Текущая неделя</button>
+        <span class="week-nav__spacer"></span>
+        <div class="week-nav__picker">
+          <label for="dayPicker">Показать день</label>
+          <input class="input input--sm" type="date" id="dayPicker">
+        </div>
+      </div>
+
+      <div class="week-grid" id="weekGrid"></div>
+
+      <section class="card day-detail" id="dayDetail" aria-live="polite"></section>
+    </section>
+
+    <!-- ===================== Статистика ===================== -->
+    <section class="page" id="page-stats" data-page="stats" aria-labelledby="statsTitle" hidden>
+      <div class="page-head">
+        <div>
+          <h1 id="statsTitle">Статистика</h1>
+          <p>Твой прогресс считается только по данным в этом браузере</p>
+        </div>
+      </div>
+
+      <div class="kpi-grid kpi-grid--5" id="statsKpis"></div>
+
+      <div class="stats-grid">
+        <section class="card" aria-labelledby="chartWeekTitle">
+          <h2 class="card__title" id="chartWeekTitle"><svg class="icon" aria-hidden="true"><use href="#i-chart"></use></svg>Выполнено за 7 дней</h2>
+          <p class="card__subtitle" id="weekChartNote"></p>
+          <div class="chart" id="chartWeek"></div>
+        </section>
+        <section class="card" aria-labelledby="chartWeekdaysTitle">
+          <h2 class="card__title" id="chartWeekdaysTitle"><svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg>Самые продуктивные дни</h2>
+          <p class="card__subtitle" id="bestDayText"></p>
+          <div class="chart" id="chartWeekdays"></div>
+        </section>
+        <section class="card" aria-labelledby="subjectProgressTitle">
+          <h2 class="card__title" id="subjectProgressTitle"><svg class="icon" aria-hidden="true"><use href="#i-book"></use></svg>Прогресс по предметам</h2>
+          <div id="subjectProgress"></div>
+        </section>
+        <section class="card" aria-labelledby="streakTitle">
+          <h2 class="card__title" id="streakTitle"><svg class="icon" aria-hidden="true"><use href="#i-flame"></use></svg>Серия учебных дней</h2>
+          <div id="streakBox"></div>
+        </section>
+      </div>
+
+      <section class="card" aria-labelledby="achievementsTitle">
+        <div class="card__head">
+          <h2 class="card__title" id="achievementsTitle"><svg class="icon" aria-hidden="true"><use href="#i-trophy"></use></svg>Достижения</h2>
+          <span class="pill" id="achievementsCount"></span>
+        </div>
+        <div class="achievements" id="achievementsGrid"></div>
+      </section>
+
+      <section class="card history-card" aria-labelledby="historyTitle">
+        <h2 class="card__title" id="historyTitle"><svg class="icon" aria-hidden="true"><use href="#i-bolt"></use></svg>Последние учебные сессии</h2>
+        <ul class="history" id="sessionHistory"></ul>
+      </section>
+    </section>
+
+    <!-- ===================== Настройки ===================== -->
+    <section class="page" id="page-settings" data-page="settings" aria-labelledby="settingsTitle" hidden>
+      <div class="page-head">
+        <div>
+          <h1 id="settingsTitle">Настройки</h1>
+          <p>Профиль, оформление, предметы и управление данными</p>
+        </div>
+      </div>
+
+      <div class="settings-grid">
+        <section class="card" aria-labelledby="profileTitle">
+          <h2 class="card__title" id="profileTitle"><svg class="icon" aria-hidden="true"><use href="#i-user"></use></svg>Профиль и учебное время</h2>
+          <form id="profileForm" class="form" novalidate>
+            <div class="field">
+              <label for="settingName">Имя</label>
+              <input class="input" type="text" id="settingName" maxlength="40" autocomplete="given-name" placeholder="Например, Аня" aria-describedby="settingNameError">
+              <p class="field__error" id="settingNameError"></p>
+            </div>
+            <div class="field">
+              <label for="settingGrade">Класс</label>
+              <select class="select" id="settingGrade" aria-describedby="settingGradeError">
+                <option value="">Не указан</option>
+                <option value="1">1 класс</option>
+                <option value="2">2 класс</option>
+                <option value="3">3 класс</option>
+                <option value="4">4 класс</option>
+                <option value="5">5 класс</option>
+                <option value="6">6 класс</option>
+                <option value="7">7 класс</option>
+                <option value="8">8 класс</option>
+                <option value="9">9 класс</option>
+                <option value="10">10 класс</option>
+                <option value="11">11 класс</option>
+              </select>
+              <p class="field__error" id="settingGradeError"></p>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="settingSession">Учебная сессия по умолчанию, мин</label>
+                <input class="input" type="number" id="settingSession" min="5" max="240" step="5" inputmode="numeric" aria-describedby="settingSessionHint settingSessionError">
+                <p class="field__hint" id="settingSessionHint">Подсвечивается в режиме «У меня 30 минут»</p>
+                <p class="field__error" id="settingSessionError"></p>
+              </div>
+              <div class="field">
+                <label for="settingDaily">Время на учёбу в день, мин</label>
+                <input class="input" type="number" id="settingDaily" min="15" max="720" step="5" inputmode="numeric" aria-describedby="settingDailyHint settingDailyError">
+                <p class="field__hint" id="settingDailyHint">По нему строится «План на сегодня»</p>
+                <p class="field__error" id="settingDailyError"></p>
+              </div>
+            </div>
+            <button type="submit" class="btn btn--primary">
+              <svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg>Сохранить настройки
+            </button>
+          </form>
+        </section>
+
+        <section class="card" aria-labelledby="appearanceTitle">
+          <h2 class="card__title" id="appearanceTitle"><svg class="icon" aria-hidden="true"><use href="#i-palette"></use></svg>Оформление</h2>
+          <fieldset class="field">
+            <legend>Тема</legend>
+            <div class="theme-options">
+              <input type="radio" name="theme" id="themeLight" value="light">
+              <label for="themeLight" class="theme-option">
+                <span class="theme-option__preview theme-option__preview--light"><i></i><i></i><i></i></span>
+                <span><svg class="icon" aria-hidden="true"><use href="#i-sun"></use></svg>Светлая</span>
+              </label>
+              <input type="radio" name="theme" id="themeDark" value="dark">
+              <label for="themeDark" class="theme-option">
+                <span class="theme-option__preview theme-option__preview--dark"><i></i><i></i><i></i></span>
+                <span><svg class="icon" aria-hidden="true"><use href="#i-moon"></use></svg>Тёмная</span>
+              </label>
+            </div>
+          </fieldset>
+          <fieldset class="field">
+            <legend>Цвет акцента</legend>
+            <div class="swatches">
+              <input type="radio" name="accent" id="accentIndigo" value="indigo">
+              <label for="accentIndigo" class="swatch swatch--indigo"><span class="sr-only">Сине-фиолетовый</span></label>
+              <input type="radio" name="accent" id="accentBlue" value="blue">
+              <label for="accentBlue" class="swatch swatch--blue"><span class="sr-only">Синий</span></label>
+              <input type="radio" name="accent" id="accentViolet" value="violet">
+              <label for="accentViolet" class="swatch swatch--violet"><span class="sr-only">Фиолетовый</span></label>
+              <input type="radio" name="accent" id="accentTeal" value="teal">
+              <label for="accentTeal" class="swatch swatch--teal"><span class="sr-only">Бирюзовый</span></label>
+              <input type="radio" name="accent" id="accentSunset" value="sunset">
+              <label for="accentSunset" class="swatch swatch--sunset"><span class="sr-only">Закат</span></label>
+            </div>
+            <p class="field__hint">Тема и цвет применяются сразу и сохраняются автоматически.</p>
+          </fieldset>
+        </section>
+
+        <section class="card" aria-labelledby="subjectsTitle">
+          <h2 class="card__title" id="subjectsTitle"><svg class="icon" aria-hidden="true"><use href="#i-book"></use></svg>Предметы</h2>
+          <ul class="subject-list" id="subjectList"></ul>
+          <form id="subjectForm" class="form subject-form" novalidate>
+            <div class="field">
+              <label for="subjectName">Добавить свой предмет</label>
+              <input class="input" type="text" id="subjectName" maxlength="30" placeholder="Например, Химия" aria-describedby="subjectNameError">
+              <p class="field__error" id="subjectNameError"></p>
+            </div>
+            <fieldset class="field">
+              <legend>Цвет предмета</legend>
+              <div class="color-picker">
+                <input type="radio" name="subjectColor" id="subjectColor1" value="1"><label for="subjectColor1" style="--subj: var(--c1)"><span class="sr-only">Синий</span></label>
+                <input type="radio" name="subjectColor" id="subjectColor2" value="2"><label for="subjectColor2" style="--subj: var(--c2)"><span class="sr-only">Оранжевый</span></label>
+                <input type="radio" name="subjectColor" id="subjectColor3" value="3"><label for="subjectColor3" style="--subj: var(--c3)"><span class="sr-only">Бирюзовый</span></label>
+                <input type="radio" name="subjectColor" id="subjectColor4" value="4"><label for="subjectColor4" style="--subj: var(--c4)"><span class="sr-only">Жёлтый</span></label>
+                <input type="radio" name="subjectColor" id="subjectColor5" value="5"><label for="subjectColor5" style="--subj: var(--c5)"><span class="sr-only">Розовый</span></label>
+                <input type="radio" name="subjectColor" id="subjectColor6" value="6"><label for="subjectColor6" style="--subj: var(--c6)"><span class="sr-only">Зелёный</span></label>
+                <input type="radio" name="subjectColor" id="subjectColor7" value="7"><label for="subjectColor7" style="--subj: var(--c7)"><span class="sr-only">Фиолетовый</span></label>
+                <input type="radio" name="subjectColor" id="subjectColor8" value="8" checked><label for="subjectColor8" style="--subj: var(--c8)"><span class="sr-only">Красный</span></label>
+              </div>
+            </fieldset>
+            <button type="submit" class="btn btn--soft">
+              <svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>Добавить предмет
+            </button>
+          </form>
+        </section>
+
+        <section class="card" aria-labelledby="dataTitle">
+          <h2 class="card__title" id="dataTitle"><svg class="icon" aria-hidden="true"><use href="#i-database"></use></svg>Данные</h2>
+          <p class="privacy-note">
+            <svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg>
+            <span>Все данные хранятся только в этом браузере (localStorage) и никуда не отправляются. Если очистить данные сайта, они пропадут, поэтому иногда сохраняй резервную копию.</span>
+          </p>
+          <p class="data-summary" id="dataSummary"></p>
+
+          <div class="data-row">
+            <div>
+              <h3>Резервная копия</h3>
+              <p>Экспорт заданий, расписания и статистики в файл JSON и импорт обратно.</p>
+            </div>
+            <div class="data-row__actions">
+              <button type="button" class="btn btn--ghost btn--sm" data-action="export-data">
+                <svg class="icon" aria-hidden="true"><use href="#i-download"></use></svg>Экспорт в JSON
+              </button>
+              <label class="btn btn--ghost btn--sm file-btn">
+                <svg class="icon" aria-hidden="true"><use href="#i-upload"></use></svg>Импорт из JSON
+                <input type="file" id="importFile" class="sr-only" accept=".json,application/json">
+              </label>
+            </div>
+          </div>
+          <p class="import-status" id="importStatus" role="status"></p>
+
+          <div class="data-row">
+            <div>
+              <h3>Демонстрационные данные</h3>
+              <p>Примеры заданий и расписания для показа работы планировщика.</p>
+            </div>
+            <div class="data-row__actions">
+              <button type="button" class="btn btn--ghost btn--sm" id="loadDemoBtn" data-action="load-demo">
+                <svg class="icon" aria-hidden="true"><use href="#i-sparkles"></use></svg>Загрузить демо
+              </button>
+              <button type="button" class="btn btn--ghost btn--sm" id="removeDemoBtn" data-action="remove-demo">
+                <svg class="icon" aria-hidden="true"><use href="#i-trash"></use></svg>Удалить демо
+              </button>
+            </div>
+          </div>
+
+          <div class="data-row">
+            <div>
+              <h3>Демо-сценарий на главной</h3>
+              <p>Пошаговая подсказка для показа StudyBoost жюри.</p>
+            </div>
+            <div class="data-row__actions">
+              <button type="button" class="btn btn--ghost btn--sm" id="tourShowBtn" data-action="tour-show">
+                <svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg>Показать заново
+              </button>
+            </div>
+          </div>
+
+          <div class="danger-zone">
+            <div>
+              <h3>Сброс данных</h3>
+              <p>Удалит все задания, расписание, статистику, достижения и настройки.</p>
+            </div>
+            <button type="button" class="btn btn--danger-soft btn--sm" data-action="reset-data">
+              <svg class="icon" aria-hidden="true"><use href="#i-trash"></use></svg>Сбросить всё
+            </button>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p><strong>StudyBoost</strong> — бесплатный образовательный проект для школьников. Работает без регистрации и без сервера.</p>
+      <p>Данные хранятся только в твоём браузере. Уведомления показываются, пока сайт открыт.</p>
+    </div>
+  </footer>
+
+  <!-- Нижняя навигация для телефонов -->
+  <nav class="bottomnav" aria-label="Навигация">
+    <a class="bottomnav__link" href="#home" data-nav="home"><svg class="icon" aria-hidden="true"><use href="#i-home"></use></svg><span>Главная</span></a>
+    <a class="bottomnav__link" href="#tasks" data-nav="tasks"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Задания</span></a>
+    <a class="bottomnav__link" href="#schedule" data-nav="schedule"><svg class="icon" aria-hidden="true"><use href="#i-calendar"></use></svg><span>Расписание</span></a>
+    <a class="bottomnav__link" href="#stats" data-nav="stats"><svg class="icon" aria-hidden="true"><use href="#i-chart"></use></svg><span>Статистика</span></a>
+    <a class="bottomnav__link" href="#settings" data-nav="settings"><svg class="icon" aria-hidden="true"><use href="#i-sliders"></use></svg><span>Настройки</span></a>
+  </nav>
+
+  <!-- Свёрнутый таймер учебной сессии -->
+  <button type="button" class="mini-timer" id="miniTimer" data-action="focus-restore" hidden>
+    <span class="mini-timer__icon"><svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg></span>
+    <span class="mini-timer__text">
+      <span class="mini-timer__time" id="miniTimerTime">00:00</span>
+      <span class="mini-timer__label" id="miniTimerLabel">Сессия идёт</span>
+    </span>
+    <span class="sr-only">— вернуться к учебной сессии</span>
+  </button>
+
+  <!-- ===================== Диалог: задание ===================== -->
+  <dialog class="modal" id="taskDialog" aria-labelledby="taskDialogTitle">
+    <form class="modal__inner" id="taskForm" novalidate>
+      <div class="modal__head">
+        <h2 id="taskDialogTitle">Новое задание</h2>
+        <button type="button" class="icon-btn icon-btn--sm" data-action="close-dialog" data-dialog="taskDialog" aria-label="Закрыть окно">
+          <svg class="icon" aria-hidden="true"><use href="#i-x"></use></svg>
+        </button>
+      </div>
+
+      <div class="field">
+        <label for="taskTitle">Название задания <span class="req" aria-hidden="true">*</span></label>
+        <input class="input" type="text" id="taskTitle" maxlength="120" required autofocus placeholder="Например, выучить 15 новых слов" aria-describedby="taskTitleError">
+        <p class="field__error" id="taskTitleError"></p>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="taskSubject">Предмет <span class="req" aria-hidden="true">*</span></label>
+          <select class="select" id="taskSubject" required aria-describedby="taskSubjectError"></select>
+          <p class="field__error" id="taskSubjectError"></p>
+        </div>
+        <div class="field" id="customSubjectField" hidden>
+          <label for="taskCustomSubject">Название своего предмета <span class="req" aria-hidden="true">*</span></label>
+          <input class="input" type="text" id="taskCustomSubject" maxlength="30" placeholder="Например, Химия" aria-describedby="taskCustomSubjectError">
+          <p class="field__error" id="taskCustomSubjectError"></p>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="taskDate">Дата сдачи <span class="req" aria-hidden="true">*</span></label>
+          <input class="input" type="date" id="taskDate" required aria-describedby="taskDateError">
+          <p class="field__error" id="taskDateError"></p>
+        </div>
+        <div class="field">
+          <label for="taskTime">Время сдачи <span class="req" aria-hidden="true">*</span></label>
+          <input class="input" type="time" id="taskTime" required aria-describedby="taskTimeError">
+          <p class="field__error" id="taskTimeError"></p>
+        </div>
+      </div>
+      <div class="quick-row quick-row--field" role="group" aria-label="Быстрый выбор срока">
+        <button type="button" class="quick" data-action="deadline-preset" data-preset="today">Сегодня вечером</button>
+        <button type="button" class="quick" data-action="deadline-preset" data-preset="tomorrow">Завтра утром</button>
+        <button type="button" class="quick" data-action="deadline-preset" data-preset="week">Через неделю</button>
+        <button type="button" class="quick quick--accent" id="nextLessonBtn" data-action="deadline-preset" data-preset="next-lesson" hidden>К следующему уроку</button>
+      </div>
+      <p class="field__hint field__hint--block" id="nextLessonHint"></p>
+
+      <div class="field">
+        <label for="taskDuration">Примерное время выполнения, минут <span class="req" aria-hidden="true">*</span></label>
+        <input class="input" type="number" id="taskDuration" min="5" max="600" step="5" inputmode="numeric" required aria-describedby="taskDurationError">
+        <p class="field__error" id="taskDurationError"></p>
+        <div class="quick-row" role="group" aria-label="Быстрый выбор времени">
+          <button type="button" class="quick" data-action="duration-preset" data-minutes="10">10 мин</button>
+          <button type="button" class="quick" data-action="duration-preset" data-minutes="20">20 мин</button>
+          <button type="button" class="quick" data-action="duration-preset" data-minutes="30">30 мин</button>
+          <button type="button" class="quick" data-action="duration-preset" data-minutes="45">45 мин</button>
+          <button type="button" class="quick" data-action="duration-preset" data-minutes="60">1 час</button>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <fieldset class="field">
+          <legend>Сложность</legend>
+          <div class="segmented">
+            <input type="radio" name="difficulty" id="diffEasy" value="easy">
+            <label for="diffEasy">Лёгкая</label>
+            <input type="radio" name="difficulty" id="diffMedium" value="medium" checked>
+            <label for="diffMedium">Средняя</label>
+            <input type="radio" name="difficulty" id="diffHard" value="hard">
+            <label for="diffHard">Сложная</label>
+          </div>
+        </fieldset>
+        <fieldset class="field">
+          <legend>Приоритет</legend>
+          <div class="segmented">
+            <input type="radio" name="priority" id="prioLow" value="low">
+            <label for="prioLow">Низкий</label>
+            <input type="radio" name="priority" id="prioMedium" value="medium" checked>
+            <label for="prioMedium">Средний</label>
+            <input type="radio" name="priority" id="prioHigh" value="high">
+            <label for="prioHigh">Высокий</label>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="field">
+        <label for="taskDescription">Описание <span class="optional">(необязательно)</span></label>
+        <textarea class="textarea" id="taskDescription" rows="3" maxlength="500" placeholder="Страница, номера упражнений, что важно не забыть" aria-describedby="taskDescriptionHint taskDescriptionError"></textarea>
+        <p class="field__hint" id="taskDescriptionHint"><span id="descCounter">0</span> / 500 символов</p>
+        <p class="field__error" id="taskDescriptionError"></p>
+      </div>
+
+      <div class="modal__foot">
+        <button type="button" class="btn btn--ghost" data-action="close-dialog" data-dialog="taskDialog">Отмена</button>
+        <button type="submit" class="btn btn--primary" id="taskSubmitBtn">Добавить задание</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ===================== Диалог: урок ===================== -->
+  <dialog class="modal modal--md" id="lessonDialog" aria-labelledby="lessonDialogTitle">
+    <form class="modal__inner" id="lessonForm" novalidate>
+      <div class="modal__head">
+        <h2 id="lessonDialogTitle">Новый урок</h2>
+        <button type="button" class="icon-btn icon-btn--sm" data-action="close-dialog" data-dialog="lessonDialog" aria-label="Закрыть окно">
+          <svg class="icon" aria-hidden="true"><use href="#i-x"></use></svg>
+        </button>
+      </div>
+
+      <div class="field">
+        <label for="lessonDay">День недели <span class="req" aria-hidden="true">*</span></label>
+        <select class="select" id="lessonDay" required aria-describedby="lessonDayError">
+          <option value="1">Понедельник</option>
+          <option value="2">Вторник</option>
+          <option value="3">Среда</option>
+          <option value="4">Четверг</option>
+          <option value="5">Пятница</option>
+          <option value="6">Суббота</option>
+          <option value="7">Воскресенье</option>
+        </select>
+        <p class="field__error" id="lessonDayError"></p>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="lessonStart">Начало <span class="req" aria-hidden="true">*</span></label>
+          <input class="input" type="time" id="lessonStart" required aria-describedby="lessonStartError">
+          <p class="field__error" id="lessonStartError"></p>
+        </div>
+        <div class="field">
+          <label for="lessonEnd">Конец <span class="req" aria-hidden="true">*</span></label>
+          <input class="input" type="time" id="lessonEnd" required aria-describedby="lessonEndError">
+          <p class="field__error" id="lessonEndError"></p>
+        </div>
+      </div>
+      <div class="field">
+        <label for="lessonSubject">Предмет <span class="req" aria-hidden="true">*</span></label>
+        <select class="select" id="lessonSubject" required aria-describedby="lessonSubjectHint lessonSubjectError"></select>
+        <p class="field__hint" id="lessonSubjectHint">Свой предмет можно добавить в разделе «Настройки».</p>
+        <p class="field__error" id="lessonSubjectError"></p>
+      </div>
+      <div class="field">
+        <label for="lessonRoom">Кабинет <span class="optional">(необязательно)</span></label>
+        <input class="input" type="text" id="lessonRoom" maxlength="20" placeholder="Например, 204" aria-describedby="lessonRoomError">
+        <p class="field__error" id="lessonRoomError"></p>
+      </div>
+
+      <div class="modal__foot">
+        <button type="button" class="btn btn--ghost" data-action="close-dialog" data-dialog="lessonDialog">Отмена</button>
+        <button type="submit" class="btn btn--primary" id="lessonSubmitBtn">Сохранить урок</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ===================== Диалог: режим «У меня 30 минут» ===================== -->
+  <dialog class="modal modal--focus" id="focusDialog" aria-label="Режим «У меня 30 минут»">
+    <div class="modal__inner">
+      <div class="modal__head">
+        <span class="pill pill--accent"><svg class="icon" aria-hidden="true"><use href="#i-bolt"></use></svg>Режим «У меня 30 минут»</span>
+        <button type="button" class="icon-btn icon-btn--sm" data-action="focus-close" aria-label="Закрыть окно">
+          <svg class="icon" aria-hidden="true"><use href="#i-x"></use></svg>
+        </button>
+      </div>
+
+      <section class="focus-view" id="focusChoose">
+        <div class="focus-head">
+          <div class="focus-head__icon"><svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg></div>
+          <h2>Сколько у тебя свободного времени?</h2>
+          <p>StudyBoost подберёт задания, которые реально успеть, с учётом сроков, приоритетов и сложности.</p>
+        </div>
+        <div class="time-options" role="group" aria-label="Доступное время">
+          <button type="button" class="time-option" data-action="focus-pick" data-minutes="15"><strong>15</strong><span>минут</span></button>
+          <button type="button" class="time-option" data-action="focus-pick" data-minutes="30"><strong>30</strong><span>минут</span></button>
+          <button type="button" class="time-option" data-action="focus-pick" data-minutes="45"><strong>45</strong><span>минут</span></button>
+          <button type="button" class="time-option" data-action="focus-pick" data-minutes="60"><strong>60</strong><span>минут</span></button>
+          <button type="button" class="time-option time-option--custom" data-action="focus-custom-toggle" aria-expanded="false" aria-controls="focusCustomForm"><strong><svg class="icon" aria-hidden="true"><use href="#i-edit"></use></svg></strong><span>свой вариант</span></button>
+        </div>
+        <form class="custom-time" id="focusCustomForm" novalidate hidden>
+          <div class="field">
+            <label for="focusCustomMinutes">Сколько минут у тебя есть? (от 5 до 240)</label>
+            <input class="input" type="number" id="focusCustomMinutes" min="5" max="240" step="5" inputmode="numeric" aria-describedby="focusCustomMinutesError">
+            <p class="field__error" id="focusCustomMinutesError"></p>
+          </div>
+          <button type="submit" class="btn btn--primary">Составить план</button>
+        </form>
+        <p class="focus-note" id="focusPendingNote"></p>
+      </section>
+
+      <section class="focus-view" id="focusPlan" hidden>
+        <div id="focusPlanContent"></div>
+        <div class="modal__foot">
+          <button type="button" class="btn btn--ghost" data-action="focus-back">
+            <svg class="icon" aria-hidden="true"><use href="#i-chevron-left"></use></svg>Изменить время
+          </button>
+          <button type="button" class="btn btn--primary" id="focusStartBtn" data-action="focus-start">
+            <svg class="icon" aria-hidden="true"><use href="#i-play"></use></svg>Начать выполнение
+          </button>
+        </div>
+      </section>
+
+      <section class="focus-view" id="focusRun" hidden>
+        <div class="run-layout">
+          <div class="run-timer">
+            <div class="timer" id="focusTimer">
+              <svg viewBox="0 0 220 220" aria-hidden="true">
+                <defs>
+                  <linearGradient id="timerGradient" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" class="timer-stop-a"></stop>
+                    <stop offset="100%" class="timer-stop-b"></stop>
+                  </linearGradient>
+                </defs>
+                <circle class="timer__track" cx="110" cy="110" r="96"></circle>
+                <circle class="timer__progress" id="timerProgress" cx="110" cy="110" r="96"></circle>
+              </svg>
+              <div class="timer__center">
+                <p class="timer__time" id="focusTimeLeft" role="timer">00:00</p>
+                <p class="timer__label" id="focusTimerLabel">осталось</p>
+              </div>
+            </div>
+            <div class="timer-controls">
+              <button type="button" class="btn btn--ghost" id="focusPauseBtn" data-action="focus-pause">
+                <svg class="icon" aria-hidden="true"><use href="#i-pause"></use></svg>Пауза
+              </button>
+              <button type="button" class="btn btn--primary" id="focusResumeBtn" data-action="focus-resume" hidden>
+                <svg class="icon" aria-hidden="true"><use href="#i-play"></use></svg>Продолжить
+              </button>
+              <button type="button" class="btn btn--danger-soft" data-action="focus-finish">
+                <svg class="icon" aria-hidden="true"><use href="#i-stop"></use></svg>Завершить
+              </button>
+            </div>
+            <button type="button" class="text-btn" data-action="focus-minimize">
+              <svg class="icon" aria-hidden="true"><use href="#i-minimize"></use></svg>Свернуть — таймер продолжит идти
+            </button>
+          </div>
+          <div class="run-tasks">
+            <h2 class="run-tasks__title">План сессии</h2>
+            <p class="run-tasks__current" id="focusCurrent"></p>
+            <ul class="session-tasks" id="focusTaskList"></ul>
+            <div id="focusAllDone"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="focus-view" id="focusResult" hidden>
+        <div id="focusResultContent"></div>
+        <div class="modal__foot modal__foot--center">
+          <button type="button" class="btn btn--ghost" data-action="go-stats">
+            <svg class="icon" aria-hidden="true"><use href="#i-chart"></use></svg>Открыть статистику
+          </button>
+          <button type="button" class="btn btn--primary" data-action="focus-close">Готово</button>
+        </div>
+      </section>
+    </div>
+  </dialog>
+
+  <!-- ===================== Диалог: подтверждение ===================== -->
+  <dialog class="modal modal--sm" id="confirmDialog" aria-labelledby="confirmTitle" aria-describedby="confirmMessage">
+    <div class="modal__inner confirm">
+      <div class="confirm__icon" id="confirmIcon"><svg class="icon" aria-hidden="true"><use href="#i-alert"></use></svg></div>
+      <h2 class="confirm__title" id="confirmTitle">Вы уверены?</h2>
+      <p class="confirm__message" id="confirmMessage"></p>
+      <div class="modal__foot modal__foot--center">
+        <button type="button" class="btn btn--ghost" data-action="confirm-no">Отмена</button>
+        <button type="button" class="btn btn--danger" id="confirmYesBtn" data-action="confirm-yes">Подтвердить</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast-stack" id="toastStack" popover="manual" aria-live="polite"></div>
+  <div class="chart-tooltip" id="chartTooltip" role="tooltip" hidden></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
